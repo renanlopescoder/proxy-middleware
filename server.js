@@ -3,7 +3,7 @@ const proxy = require('http-proxy-middleware')
 const app = express()
 
 const fbAuthService = {
-  target: 'http://bifrost-auth-service.herokuapp.com',
+  target: 'https://bifrost-auth-service.herokuapp.com',
   changeOrigin: true,
 }
 
