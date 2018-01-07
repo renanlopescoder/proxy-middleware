@@ -5,6 +5,7 @@ const app = express()
 const fbAuthService = {
   target: 'https://bifrost-auth-service.herokuapp.com',
   changeOrigin: true,
+  secure: false
 }
 
 // Path replace sample
