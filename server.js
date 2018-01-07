@@ -18,9 +18,9 @@ const fbAuthService = {
 //   proxyReq.setHeader('api-key', 'ae3fedf5ff7f4b5ca957a84f75c7b76c')
 // )
 
-const authApiProxy = proxy(authService)
+const fbAuthProxy = proxy(fbAuthService)
 
-app.get('/auth/facebook', fbAuthService)
+app.get('/auth/facebook', fbAuthProxy)
 
 let port = process.env.PORT || 3000
 
