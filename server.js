@@ -2,26 +2,20 @@ const express = require('express')
 const proxy = require('http-proxy-middleware')
 const app = express()
 
-const fbAuthService = {
+const blackwalletFbAuthService = {
   target: 'https://bifrost-auth-service.herokuapp.com',
   changeOrigin: true,
-  secure: false
+  pathRewrite: {'^/blackwallet/auth/facebook' : '/auth/facebook', '^/blackwallet/auth/new': '/auth/new'}
 }
 
-// Path replace sample
-// const fbAuthService = {
-//   target: 'http://bifrost-auth-service.herokuapp.com',
-//   changeOrigin: true,
-//   pathRewrite: {'^/api/auth' : '/auth/facebook'},
-// }
+blackwalletFbAuthService.onProxyReq = (proxyReq, req, res) => (
+  proxyReq.setHeader('application', 'blackwallet')
+)
 
-// nyTimesService.onProxyReq = (proxyReq, req, res) => (
-//   proxyReq.setHeader('api-key', 'ae3fedf5ff7f4b5ca957a84f75c7b76c')
-// )
+const blackwalletFbAuthProxy = proxy(blackwalletFbAuthService)
 
-const fbAuthProxy = proxy(fbAuthService)
-
-app.get('/auth/facebook', fbAuthProxy)
+app.get('/blackwallet/auth/facebook', blackwalletFbAuthProxy)
+app.get('/blackwallet/auth/new', blackwalletFbAuthProxy)
 
 let port = process.env.PORT || 3000
 
