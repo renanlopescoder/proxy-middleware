@@ -1,16 +1,16 @@
 {
   "name": "proxy-middleware",
   "version": "1.0.0",
-  "description": "Node with Express http proxy middleware",
+  "description": "Node with Restify http proxy middleware",
   "scripts": {
-    "start": "nodemon ./server.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "pm2 start server.js --watch",
+    "start": "node ./node_modules/.bin/pm2 start server.js"
   },
   "author": "Renan Lopes",
   "license": "ISC",
   "dependencies": {
-    "express": "^4.16.2",
     "http-proxy-middleware": "^0.17.4",
-    "nodemon": "^1.14.7"
+    "pm2": "^2.9.3",
+    "restify": "^6.3.4"
   }
 }

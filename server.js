@@ -1,22 +1,36 @@
-const express = require('express')
-const proxy = require('http-proxy-middleware')
-const app = express()
+const restify = require('restify');
+const proxy = require('http-proxy-middleware');
 
-const blackwalletFbAuthService = {
+// Services
+const blackwalletAuthService = {
   target: 'https://bifrost-auth-service.herokuapp.com',
   changeOrigin: true,
-  pathRewrite: {'^/blackwallet/auth/facebook' : '/auth/facebook', '^/blackwallet/auth/new': '/auth/new'}
-}
+  pathRewrite: {
+    '^/blackwallet/auth/facebook': '/auth/facebook',
+    '^/blackwallet/auth/local': '/auth/local',
+    '^/blackwallet/auth/local/new': '/auth/local/new',
+  },
+};
 
+// Proxy
 blackwalletFbAuthService.onProxyReq = (proxyReq, req, res) => (
   proxyReq.setHeader('application', 'blackwallet')
-)
+);
 
-const blackwalletFbAuthProxy = proxy(blackwalletFbAuthService)
+const blackwalletAuthProxy = proxy(blackwalletAuthService);
 
-app.get('/blackwallet/auth/facebook', blackwalletFbAuthProxy)
-app.get('/blackwallet/auth/new', blackwalletFbAuthProxy)
+// Create and Config Server port
+const PORT = process.env.PORT || 3000;
+const server = restify.createServer({
+  title: 'Proxy Server',
+});
 
-let port = process.env.PORT || 3000
+// Routes
+server.get('/blackwallet/auth/facebook', blackwalletAuthProxy);
+server.post('/blackwallet/auth/local/new', blackwalletAuthProxy);
+server.post('/blackwallet/auth/local', blackwalletAuthProxy);
 
-app.listen(port, () => console.log('Servidor proxy Iniciado na porta ' + port))
+// Starting the Server
+server.listen(PORT, () => {
+  console.log(`Listening on ${PORT}`);
+});
